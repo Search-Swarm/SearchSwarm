@@ -8,7 +8,16 @@ This is the official code repository for **SearchSwarm: Towards Delegation Intel
 
 SearchSwarm trains a main research agent to use subagents as an active context-management mechanism. The main agent decomposes long-horizon research tasks, dispatches bounded evidence-gathering subtasks, receives compact citation-grounded reports, and synthesizes the final answer under a finite context budget.
 
-> Paper, project page, model weights, and dataset links will be updated after public release.
+<p align="center">
+  <a href="https://Search-Swarm.github.io">📃 Project Page</a>
+  &nbsp; | &nbsp;
+  <a href="https://huggingface.co/SearchSwarm/SearchSwarm-30B-A3B">🤗 Model Weights</a>
+  &nbsp; | &nbsp;
+  <a href="https://huggingface.co/datasets/SearchSwarm/SearchSwarm-SFT">🤗 SFT Dataset</a>
+  &nbsp; | &nbsp;
+  <a href="https://github.com/Search-Swarm/SearchSwarm/blob/main/paper.pdf">📑 Paper</a>
+</p>
+
 
 ## Overview
 
@@ -100,15 +109,6 @@ Production-scale 30B-A3B training is designed for a multi-node GPU cluster. The 
 - `train_megatron_shared_fs.sh`: shared-filesystem rendezvous path for schedulers such as Kubernetes jobs or cloud batch.
 
 See [`train/README.md`](train/README.md) for the full setup, cached-dataset preparation, parallelism defaults, and launcher-specific instructions.
-
-## Data and Models
-
-We plan to release:
-
-- cleaned high-quality SFT data,
-- SearchSwarm model weights.
-
-Links will be added after release.
 
 ## Notes on Evaluation Data
 
