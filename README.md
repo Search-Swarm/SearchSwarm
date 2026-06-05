@@ -119,7 +119,7 @@ The repository intentionally does **not** bundle full benchmark test sets such a
 ```bibtex
 @misc{searchswarm2026,
   title        = {SearchSwarm: Towards Delegation Intelligence in Agentic LLMs for Long-Horizon Deep Research},
-  author       = {Anonymous Authors},
+  author       = {Ning, Pu and Chen, Quan and Tao, Kun and Tang, Xinyu and Wang, Tianshu and Cao, Qianggang and Kong, Xinyu and Wen, Zujie and Zhang, Zhiqiang and Zhou, Jun},
   year         = {2026},
   note         = {Under review}
 }
