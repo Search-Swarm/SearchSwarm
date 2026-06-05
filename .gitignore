@@ -1,0 +1,43 @@
+# macOS / editor files
+.DS_Store
+**/.DS_Store
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Secrets and local environment
+.env
+*.env
+!.env.example
+harness/.env
+
+# Runtime outputs
+results/
+outputs/
+logs/
+*.log
+subagent_trajectories.jsonl
+
+# Training artifacts
+megatron_output/
+checkpoints/
+checkpoint-*/
+wandb/
+tensorboard/
+runs/
+
+# Large local data/model caches
+cached_dataset/
+ms_cache/
+hf_cache/
+models/
+data/
+datasets/
+

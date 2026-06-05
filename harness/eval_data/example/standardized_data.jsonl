@@ -1,0 +1,4 @@
+{"task_id": "example-1", "task_question": "What is the capital city of Australia?", "file_name": "", "ground_truth": "Canberra", "metadata": {"note": "synthetic example, format demo only"}}
+{"task_id": "example-2", "task_question": "What is the chemical symbol for the element gold?", "file_name": "", "ground_truth": "Au", "metadata": {"note": "synthetic example, format demo only"}}
+{"task_id": "example-3", "task_question": "In which year did the first crewed Moon landing take place?", "file_name": "", "ground_truth": "1969", "metadata": {"note": "synthetic example, format demo only"}}
+{"task_id": "example-4", "task_question": "Which ocean is the largest by surface area?", "file_name": "", "ground_truth": "The Pacific Ocean", "metadata": {"note": "synthetic example, format demo only"}}

@@ -1,0 +1,11 @@
+json5
+numpy
+openai
+qwen-agent
+requests
+scipy
+tiktoken
+tqdm
+transformers
+urllib3
+vllm

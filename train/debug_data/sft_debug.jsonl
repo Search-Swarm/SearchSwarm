@@ -1,0 +1,16 @@
+{"messages":[{"role":"user","content":"请用一句话介绍什么是监督微调。"},{"role":"assistant","content":"监督微调是用人工整理的输入输出样本继续训练模型，使模型更稳定地遵循目标任务和回答格式。"}]}
+{"messages":[{"role":"user","content":"把下面这句话翻译成英文：今天天气很好，适合散步。"},{"role":"assistant","content":"The weather is nice today, so it is a good day for a walk."}]}
+{"messages":[{"role":"user","content":"给出三个排查 Python 脚本报错的基本步骤。"},{"role":"assistant","content":"先阅读完整 traceback 定位报错行，再检查输入数据和依赖版本，最后用最小样例复现并逐步缩小问题范围。"}]}
+{"messages":[{"role":"user","content":"什么是 JSONL 格式？"},{"role":"assistant","content":"JSONL 是每一行都是一个独立 JSON 对象的文本格式，常用于大规模数据流式读取和训练数据存储。"}]}
+{"messages":[{"role":"user","content":"把 3 个优先级从高到低排序：正确性、速度、日志美观。"},{"role":"assistant","content":"正确性最高，其次是速度，最后才是日志美观。"}]}
+{"messages":[{"role":"user","content":"解释一下 CUDA_VISIBLE_DEVICES=0,1 的作用。"},{"role":"assistant","content":"它限制当前进程只能看到编号为 0 和 1 的两张 GPU，分布式启动时本地 rank 会映射到这些可见设备上。"}]}
+{"messages":[{"role":"user","content":"如果训练数据路径不存在，应该先检查什么？"},{"role":"assistant","content":"应该先检查脚本里的数据路径是否是占位符、文件是否真实存在、以及当前运行节点是否能访问该路径。"}]}
+{"messages":[{"role":"user","content":"写一个简短的 git status 输出解释。"},{"role":"assistant","content":"git status 会显示当前分支、暂存区变更、未暂存变更和未跟踪文件，用来判断工作区是否干净。"}]}
+{"messages":[{"role":"user","content":"什么情况下需要使用 cached dataset？"},{"role":"assistant","content":"当数据集较大或多机训练需要所有节点读取一致的 tokenized 数据时，使用 cached dataset 可以减少启动时间并避免各节点预处理不一致。"}]}
+{"messages":[{"role":"user","content":"用一句话说明 tensor parallel 的目的。"},{"role":"assistant","content":"Tensor parallel 通过把单层模型计算切到多张 GPU 上，降低单卡显存压力并提升大模型训练可行性。"}]}
+{"messages":[{"role":"user","content":"把这句话改得更正式：这个脚本跑挂了。"},{"role":"assistant","content":"该脚本执行失败，需要查看日志以定位具体原因。"}]}
+{"messages":[{"role":"user","content":"为什么调试训练应该先用小模型？"},{"role":"assistant","content":"小模型启动快、显存压力低，能更快验证环境、数据格式和训练参数是否正确。"}]}
+{"messages":[{"role":"user","content":"什么是 micro batch size？"},{"role":"assistant","content":"Micro batch size 是每个数据并行 rank 在一次前向和反向计算中实际处理的样本数。"}]}
+{"messages":[{"role":"user","content":"列出两个导致 NCCL 通信失败的常见原因。"},{"role":"assistant","content":"常见原因包括网卡选择错误和节点间端口或防火墙不通。"}]}
+{"messages":[{"role":"user","content":"把“不要重复预处理已经完成的数据”改写成工程文档风格。"},{"role":"assistant","content":"预处理阶段应检测并复用已完成的中间产物，避免重复计算和覆盖有效输出。"}]}
+{"messages":[{"role":"user","content":"解释一下 --max_length 在训练数据处理中的意义。"},{"role":"assistant","content":"--max_length 用来限制样本 token 长度，超过该长度的样本会按配置被截断或删除。"}]}
