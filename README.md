@@ -15,7 +15,7 @@ SearchSwarm trains a main research agent to use subagents as an active context-m
   &nbsp; | &nbsp;
   <a href="https://huggingface.co/datasets/SearchSwarm/SearchSwarm-SFT">🤗 SFT Dataset</a>
   &nbsp; | &nbsp;
-  <a href="https://github.com/Search-Swarm/SearchSwarm/blob/main/paper.pdf">📑 Paper</a>
+  <a href="https://arxiv.org/abs/2606.09730v1">📑 Paper</a>
 </p>
 
 
