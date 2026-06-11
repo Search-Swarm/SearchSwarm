@@ -93,30 +93,6 @@ def get_client(model_mode=None):
     return getattr(thread_local, attr_name)
 
 
-def get_browsecomp_judge_prompt_mode():
-    mode = os.environ.get("BROWSECOMP_JUDGE_PROMPT_MODE", "legacy").strip().lower()
-    if not mode:
-        mode = "legacy"
-    if mode not in {"official", "legacy"}:
-        raise ValueError(
-            f"Unsupported BROWSECOMP_JUDGE_PROMPT_MODE={mode!r}; "
-            "expected 'official' or 'legacy'"
-        )
-    return mode
-
-
-def get_browsecomp_judge_response_mode():
-    mode = os.environ.get("BROWSECOMP_JUDGE_RESPONSE_MODE", "answer_only").strip().lower()
-    if mode in {"answer", "answer-only"}:
-        mode = "answer_only"
-    if not mode:
-        mode = "answer_only"
-    if mode not in {"full", "answer_only"}:
-        raise ValueError(
-            f"Unsupported BROWSECOMP_JUDGE_RESPONSE_MODE={mode!r}; "
-            "expected 'full' or 'answer_only'"
-        )
-    return mode
 
 
 def _is_browsecomp_dataset(dataset_name):
@@ -132,19 +108,9 @@ def get_judge_prompt_from_folder(folder_path):
     folder_name = os.path.basename(os.path.normpath(folder_path)).lower()
     is_browsecomp = "bc" in folder_name or "browsecomp" in folder_name
     if is_browsecomp and "zh" in folder_name:
-        prompt = (
-            JUDGE_PROMPT_BROWSECOMP_OFFICIAL
-            if get_browsecomp_judge_prompt_mode() == "official"
-            else JUDGE_PROMPT_BC_zh
-        )
-        return prompt, "browsecomp_zh"
+        return JUDGE_PROMPT_BC_zh, "browsecomp_zh"
     elif is_browsecomp:
-        prompt = (
-            JUDGE_PROMPT_BROWSECOMP_OFFICIAL
-            if get_browsecomp_judge_prompt_mode() == "official"
-            else JUDGE_PROMPT_BC_en
-        )
-        return prompt, "browsecomp_en"
+        return JUDGE_PROMPT_BC_en, "browsecomp_en"
     elif "gaia" in folder_name:
         return JUDGE_PROMPT_GAIA, "gaia"
     elif "seal" in folder_name:
@@ -220,10 +186,6 @@ def _extract_full_final_response(item):
 
 
 def _judge_response_for_item(item, dataset_name=None):
-    if _is_browsecomp_dataset(dataset_name):
-        if get_browsecomp_judge_response_mode() == "full":
-            return _extract_full_final_response(item)
-        return _extract_answer_only_response(item)
     return _extract_answer_only_response(item)
 
 
@@ -641,8 +603,8 @@ def process_folder(input_folder, judge_prompt, dataset_name, available_tools, re
     print(f"Judge model mode: {judge_model_mode}")
     print(f"Judge model: {judge_model}")
     if _is_browsecomp_dataset(dataset_name):
-        print(f"BrowseComp judge prompt mode: {get_browsecomp_judge_prompt_mode()}")
-        print(f"BrowseComp judge response mode: {get_browsecomp_judge_response_mode()}")
+        print("BrowseComp judge prompt mode: legacy")
+        print("BrowseComp judge response mode: answer_only")
 
     all_scores_dict = defaultdict(list)
     acc_list = []

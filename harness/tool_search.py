@@ -16,7 +16,7 @@ class ToolCallFormatError(Exception):
     """Raised when the model produces a tool call whose arguments cannot be parsed."""
     pass
 
-SEARCH_NUM_RESULTS = int(os.getenv('SEARCH_NUM_RESULTS', 5))
+SEARCH_NUM_RESULTS = int(os.getenv('SEARCH_NUM_RESULTS', 10))
 
 
 # --------------- SFT-aligned response formatter ---------------

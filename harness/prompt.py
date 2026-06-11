@@ -390,7 +390,7 @@ PREAMBLE_ONLY = get_preamble(os.getenv("PROMPT_MODE", "default"))
 OPENAI_TOOLS = get_openai_tools(
     os.getenv("SEARCH_MODE", "multi"),
     os.getenv("TOOL_TYPE", "four"),
-    os.getenv("CLARIFY_PYTHON", "0") == "1",
+    os.getenv("CLARIFY_PYTHON", "1") == "1",
     enable_sub_agent=ENABLE_SUB_AGENT,
 )
 
@@ -399,13 +399,13 @@ SUB_AGENT_PREAMBLE = _SUB_AGENT_PREAMBLE
 SUB_AGENT_OPENAI_TOOLS = get_sub_agent_openai_tools(
     os.getenv("SEARCH_MODE", "multi"),
     os.getenv("TOOL_TYPE", "four"),
-    os.getenv("CLARIFY_PYTHON", "0") == "1",
+    os.getenv("CLARIFY_PYTHON", "1") == "1",
 )
 
 SUB_AGENT_XML_SYSTEM_PROMPT = get_sub_agent_system_prompt(
     os.getenv("SEARCH_MODE", "multi"),
     os.getenv("TOOL_TYPE", "four"),
-    os.getenv("CLARIFY_PYTHON", "0") == "1",
+    os.getenv("CLARIFY_PYTHON", "1") == "1",
 )
 
 SYSTEM_PROMPT = _compose_system_prompt(PREAMBLE_ONLY, OPENAI_TOOLS)
