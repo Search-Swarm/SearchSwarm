@@ -90,6 +90,18 @@ For full harness configuration, including `ENABLE_SUB_AGENT`, `SEARCH_MODE`, `TO
 
 The training scripts run full-parameter SFT with ms-swift's Megatron backend.
 
+### SFT data
+
+[SearchSwarm-SFT](https://huggingface.co/datasets/SearchSwarm/SearchSwarm-SFT) stores one bundle per row: a main-agent conversation plus the sub-agent conversations it dispatched (`messages` + `subagents` columns). `train/convert_share_to_cached.py` streams the parquet and unrolls it into flat ms-swift `messages` records — one per main and per sub-agent trajectory:
+
+```bash
+cd train
+hf download SearchSwarm/SearchSwarm-SFT --repo-type dataset --local-dir SearchSwarm-SFT
+python convert_share_to_cached.py --parquet SearchSwarm-SFT/train.parquet --out data.jsonl
+```
+
+The parquet must be read streaming — `pandas.read_parquet` / `pyarrow.parquet.read_table` fail on its single 2.1 GB row group. See [`train/README.md`](train/README.md) for details and the pre-tokenization step.
+
 ### Single-GPU smoke test
 
 This validates the environment and launch chain with a small model and the bundled debug data. It is not a production SearchSwarm training run.
@@ -108,7 +120,7 @@ Production-scale 30B-A3B training is designed for a multi-node GPU cluster. The 
 - `train_megatron_multinode.sh`: SSH / torchrun path for traditional clusters.
 - `train_megatron_shared_fs.sh`: shared-filesystem rendezvous path for schedulers such as Kubernetes jobs or cloud batch.
 
-See [`train/README.md`](train/README.md) for the full setup, cached-dataset preparation, parallelism defaults, and launcher-specific instructions.
+See [`train/README.md`](train/README.md) for the full setup, dataset preparation and pre-tokenization, parallelism defaults, and launcher-specific instructions.
 
 ## Notes on Evaluation Data
 

@@ -32,6 +32,59 @@ NPROC_PER_NODE=2 CUDA_VISIBLE_DEVICES=0,1 bash train_megatron.sh
 > 30B-MoE full-parameter at 128K context is **not** single-node feasible (even on
 > 8×H200). Use one of the multi-node paths below.
 
+## SearchSwarm-SFT dataset preparation
+
+[SearchSwarm-SFT](https://huggingface.co/datasets/SearchSwarm/SearchSwarm-SFT)
+ships a single `train.parquet` with one **bundle** per row — a main-agent
+conversation plus the sub-agent conversations it dispatched:
+
+```json
+{
+  "source":        "redsearcher | openseeker",
+  "question":      "<main task question>",
+  "answer":        "<ground-truth answer>",
+  "messages":      [{"role": "system|user|assistant", "content": "..."}],
+  "subagents":     [{"question": "<sub-agent briefing>", "messages": ["..."]}],
+  "num_subagents": 3
+}
+```
+
+A bundle holds `1 + num_subagents` independent conversations, so it is not
+directly trainable. `convert_share_to_cached.py` unrolls every bundle into flat
+ms-swift records — `{"messages": [...]}`, one line per main trajectory and one
+per sub-agent trajectory. Conversations are stored already normalized (system
+prompt folded into a leading system message; roles limited to
+`system`/`user`/`assistant`; every trajectory ends on an assistant message), so
+the converter only splits — it never rewrites content.
+
+```bash
+hf download SearchSwarm/SearchSwarm-SFT --repo-type dataset --local-dir SearchSwarm-SFT
+
+python convert_share_to_cached.py \
+    --parquet SearchSwarm-SFT/train.parquet \
+    --out data.jsonl
+```
+
+> [!IMPORTANT]
+> Stream this parquet — never whole-file read it. It is a single ~2.1 GB row
+> group whose nested sub-agent content column decompresses to ~5.8 GB, past
+> Arrow's 2 GB per-chunk string limit, so `pandas.read_parquet`,
+> `pyarrow.parquet.read_table`, and a plain `datasets.load_dataset` fail with
+> `ArrowNotImplementedError: Nested data conversions not supported for chunked
+> array outputs` (or exhaust memory), and the Hub dataset viewer cannot preview
+> the `messages` / `subagents` columns. The converter streams with
+> `ParquetFile.iter_batches`, which keeps peak memory at a few hundred MB. The
+> same pattern works for any custom reader:
+>
+> ```python
+> import pyarrow.parquet as pq
+>
+> pf = pq.ParquetFile("train.parquet")
+> for batch in pf.iter_batches(batch_size=32):
+>     for row in batch.to_pylist():
+>         row["messages"], row["subagents"]  # full nested data, decoded incrementally
+> ```
+
 ## Multi-node training
 
 The 30B config defaults to 8 nodes × 8 GPU = 64 GPUs at 128K context. All three
@@ -43,18 +96,25 @@ paths run the same `megatron sft`; choose by your environment:
   filesystem but give no rank and no SSH (Kubernetes Job, cloud batch, ...).
 
 All three consume a **pre-tokenized `--cached_dataset`** so every node reads
-identical tokenized data (avoids per-node preprocessing drift). Build one first
-with ms-swift, then point `DATA_PATH` at the resulting `train/` subdirectory:
+identical tokenized data (avoids per-node preprocessing drift). Build one from
+the `data.jsonl` produced above (or let the converter chain this step via
+`--cached-dataset-dir`), then point `DATA_PATH` at the resulting `train/`
+subdirectory:
 
 ```bash
 swift export \
     --model Qwen/Qwen3-30B-A3B-Thinking-2507 \
-    --dataset /path/to/data.jsonl \
+    --dataset data.jsonl \
     --max_length 131072 \
     --to_cached_dataset true \
-    --output_dir /path/to/cached_dataset
+    --output_dir /path/to/cached_dataset \
+    --dataset_num_proc 64
 # -> use DATA_PATH=/path/to/cached_dataset/train
 ```
+
+Measured with the Qwen3 tokenizer, SearchSwarm-SFT trajectories top out around
+118K tokens, so `--max_length 131072` keeps them intact. Set `USE_HF=1` if the
+tokenizer should come from the HF Hub rather than ModelScope.
 
 ### Ray (no inter-node SSH; recommended for cloud)
 
@@ -146,6 +206,7 @@ swift export \
 
 | File | Purpose |
 |---|---|
+| `convert_share_to_cached.py` | Unroll SearchSwarm-SFT bundles (`train.parquet`) into flat ms-swift `data.jsonl`; `--cached-dataset-dir` chains `swift export`. |
 | `train_megatron.sh` | Single-GPU smoke test (Qwen2.5-0.5B + `debug_data/`). |
 | `train_megatron_multinode.sh <RANK>` | SSH/torchrun path; run on every node. Reads `env.sh`. |
 | `train_megatron_ray.sh` | Ray path; run once on the head node. |
