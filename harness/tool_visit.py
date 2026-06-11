@@ -62,9 +62,20 @@ class Visit(BaseTool):
 
     def __init__(self, cfg: Optional[dict] = None):
         super().__init__(cfg)
+        # Summary model may live behind a different endpoint than the main
+        # model; SUMMARY_API_BASE_URL / SUMMARY_API_KEY fall back to the main
+        # API_BASE_URL / API_KEY when unset.
+        summary_base_url = os.environ.get(
+            "SUMMARY_API_BASE_URL",
+            os.environ.get("API_BASE_URL", "http://localhost:8000"),
+        )
+        summary_api_key = os.environ.get(
+            "SUMMARY_API_KEY",
+            os.environ.get("API_KEY", ""),
+        )
         self._summary_client = OpenAI(
-            base_url=os.environ.get("API_BASE_URL", "http://localhost:8000").rstrip("/") + "/v1",
-            api_key=os.environ.get("API_KEY", ""),
+            base_url=summary_base_url.rstrip("/") + "/v1",
+            api_key=summary_api_key,
             timeout=120.0,
         )
 
