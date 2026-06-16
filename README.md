@@ -129,11 +129,11 @@ The repository intentionally does **not** bundle full benchmark test sets such a
 ## Citation
 
 ```bibtex
-@misc{searchswarm2026,
-  title        = {SearchSwarm: Towards Delegation Intelligence in Agentic LLMs for Long-Horizon Deep Research},
-  author       = {Ning, Pu and Chen, Quan and Tao, Kun and Tang, Xinyu and Wang, Tianshu and Cao, Qianggang and Kong, Xinyu and Wen, Zujie and Zhang, Zhiqiang and Zhou, Jun},
-  year         = {2026},
-  note         = {Under review}
+@article{ning2026searchswarm,
+  title={SearchSwarm: Towards Delegation Intelligence in Agentic LLMs for Long-Horizon Deep Research},
+  author={Ning, Pu and Chen, Quan and Tao, Kun and Tang, Xinyu and Wang, Tianshu and Cao, Qianggang and Kong, Xinyu and Wen, Zujie and Zhang, Zhiqiang and Zhou, Jun},
+  journal={arXiv preprint arXiv:2606.09730},
+  year={2026}
 }
 ```
 
